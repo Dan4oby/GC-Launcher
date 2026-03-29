@@ -657,7 +657,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         m_settings->registerSetting("NumberOfConcurrentTasks", 10);
         m_settings->registerSetting("NumberOfConcurrentDownloads", 6);
         m_settings->registerSetting("NumberOfManualRetries", 1);
-        m_settings->registerSetting("RequestTimeout", 60);
+        m_settings->registerSetting("RequestTimeout", 20);
 
         QString defaultMonospace;
         int defaultSize = 11;
@@ -715,7 +715,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
 
         // Language
         m_settings->registerSetting("Language", QString());
-        m_settings->registerSetting("UseSystemLocale", false);
+        m_settings->registerSetting("UseSystemLocale", true);
 
         // Console
         m_settings->registerSetting("ShowConsole", false);
@@ -736,7 +736,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         m_settings->registerSetting({ "ProxyPass", "ProxyPassword" }, "");
 
         // Memory
-        m_settings->registerSetting({ "MinMemAlloc", "MinMemoryAlloc" }, 512);
+        m_settings->registerSetting({ "MinMemAlloc", "MinMemoryAlloc" }, SysInfo::defaultMinJvmMem());
         m_settings->registerSetting({ "MaxMemAlloc", "MaxMemoryAlloc" }, SysInfo::defaultMaxJvmMem());
         m_settings->registerSetting("PermGen", 128);
 
@@ -748,13 +748,13 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         m_settings->registerSetting("JavaVersion", "");
         m_settings->registerSetting("JavaVendor", "");
         m_settings->registerSetting("LastHostname", "");
-        m_settings->registerSetting("JvmArgs", "");
-        m_settings->registerSetting("IgnoreJavaCompatibility", false);
-        m_settings->registerSetting("IgnoreJavaWizard", false);
+        m_settings->registerSetting("JvmArgs", "SysInfo::defaultJvmArgs()");
+        m_settings->registerSetting("IgnoreJavaCompatibility", true);
+        m_settings->registerSetting("IgnoreJavaWizard", true);
         auto defaultEnableAutoJava = m_settings->get("JavaPath").toString().isEmpty();
-        m_settings->registerSetting("AutomaticJavaSwitch", defaultEnableAutoJava);
-        m_settings->registerSetting("AutomaticJavaDownload", defaultEnableAutoJava);
-        m_settings->registerSetting("UserAskedAboutAutomaticJavaDownload", false);
+        m_settings->registerSetting("AutomaticJavaSwitch", true);
+        m_settings->registerSetting("AutomaticJavaDownload", true);
+        m_settings->registerSetting("UserAskedAboutAutomaticJavaDownload", true);
 
         // Legacy settings
         m_settings->registerSetting("OnlineFixes", false);
@@ -778,7 +778,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         m_settings->registerSetting("ShowGameTime", true);
         m_settings->registerSetting("ShowGlobalGameTime", true);
         m_settings->registerSetting("RecordGameTime", true);
-        m_settings->registerSetting("ShowGameTimeWithoutDays", false);
+        m_settings->registerSetting("ShowGameTimeWithoutDays", true);
 
         // Minecraft mods
         m_settings->registerSetting("ModMetadataDisabled", false);
@@ -803,7 +803,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
 
         m_settings->registerSetting("StatusBarVisible", true);
 
-        m_settings->registerSetting("ToolbarsLocked", false);
+        m_settings->registerSetting("ToolbarsLocked", true);
 
         // Instance
         m_settings->registerSetting("InstSortMode", "Name");
@@ -911,15 +911,15 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         // Init page provider
         {
             m_globalSettingsProvider = std::make_unique<GenericPageProvider>(tr("Settings"));
-            m_globalSettingsProvider->addPage<LauncherPage>();
+            //m_globalSettingsProvider->addPage<LauncherPage>();
             m_globalSettingsProvider->addPage<LanguagePage>();
             m_globalSettingsProvider->addPage<AppearancePage>();
-            m_globalSettingsProvider->addPage<MinecraftPage>();
+            //m_globalSettingsProvider->addPage<MinecraftPage>();
             m_globalSettingsProvider->addPage<JavaPage>();
             m_globalSettingsProvider->addPage<AccountListPage>();
             m_globalSettingsProvider->addPage<APIPage>();
-            m_globalSettingsProvider->addPage<ExternalToolsPage>();
-            m_globalSettingsProvider->addPage<ProxyPage>();
+            //m_globalSettingsProvider->addPage<ExternalToolsPage>();
+            //m_globalSettingsProvider->addPage<ProxyPage>();
         }
 
         PixmapCache::setInstance(new PixmapCache(this));

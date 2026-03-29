@@ -87,11 +87,42 @@ QString useQTForArch()
 
 int defaultMaxJvmMem()
 {
-    // If totalRAM < 6GB, use (totalRAM / 1.5), else 4GB
-    if (const uint64_t totalRAM = HardwareInfo::totalRamMiB(); totalRAM < (4096 * 1.5))
-        return totalRAM / 1.5;
+    const uint64_t totalRAM = HardwareInfo::totalRamMiB();
+    int maxMemoryAlloc;
+
+    if (totalRAM <= 4096)
+        maxMemoryAlloc = 2048;
+    else if (totalRAM <= (4096 * 2))
+        maxMemoryAlloc = 2560;
     else
-        return 4096;
+        maxMemoryAlloc = 3072;
+
+    return maxMemoryAlloc;
+}
+
+int defaultMinJvmMem()
+{
+    const uint64_t totalRAM = HardwareInfo::totalRamMiB();
+    int minMemoryAlloc;
+
+    if (totalRAM <= 4096)
+        minMemoryAlloc = 2048;
+    else if (totalRAM <= (4096 * 2))
+        minMemoryAlloc = 2560;
+    else
+        minMemoryAlloc = 3072;
+
+    return minMemoryAlloc;
+}
+
+string defaultJvmArgs()
+{
+    const uint64_t totalRAM = HardwareInfo::totalRamMiB();
+
+    if (totalRAM <= (4096 * 2))
+        return "-XX:-UsePerfData -XX:+AlwaysPreTouch -XX:+UseCompactObjectHeaders -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=8M";
+    else 
+        return "-XX:-UsePerfData -XX:+AlwaysPreTouch -XX:+UseCompactObjectHeaders -XX:+UseZGC";
 }
 
 QString getSupportedJavaArchitecture()
